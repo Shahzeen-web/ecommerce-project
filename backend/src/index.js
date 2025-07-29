@@ -20,10 +20,15 @@ const server = http.createServer(app);
 // ✅ Setup Socket.IO
 const io = new SocketIOServer(server, {
   cors: {
-    origin: ["http://localhost:5173", "http://localhost:5175"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5175",
+      "https://shahzeen-web.github.io", // ✅ Add this
+    ],
     credentials: true,
   },
 });
+
 
 // ✅ Real-time cart events
 io.on("connection", (socket) => {
@@ -46,10 +51,15 @@ const __dirname = path.dirname(__filename);
 // ✅ CORS
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5175"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5175",
+      "https://shahzeen-web.github.io", // ✅ Add this
+    ],
     credentials: true,
   })
 );
+
 
 // ✅ Stripe webhook must come before express.json
 import webhookRoutes from "../routes/webhookRoutes.js";
@@ -100,7 +110,7 @@ app.get("/", (req, res) => {
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
-  console.log(`🚀 Server running with WebSocket at http://localhost:${PORT}`);
+console.log(`🚀 Server running with WebSocket on port ${PORT}`);
 });
 
 export default app;

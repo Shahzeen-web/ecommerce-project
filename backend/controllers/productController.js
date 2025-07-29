@@ -37,20 +37,22 @@ export const getProducts = async (req, res) => {
     const cached = cache.get(cacheKey);
     if (cached) return res.json(cached);
 
-    const whereClause = {
-      AND: [
-        search
-          ? {
-              name: {
-                contains: search,
-                mode: "insensitive",
-              },
-            }
-          : {},
-        categoryId ? { categoryId } : {},
-        minPrice || maxPrice ? { price: priceFilter } : {},
-      ],
-    };
+    const whereClause = {};
+
+if (search) {
+  whereClause.name = {
+    contains: search,
+    mode: "insensitive",
+  };
+}
+
+if (categoryId) {
+  whereClause.categoryId = categoryId;
+}
+
+if (minPrice || maxPrice) {
+  whereClause.price = priceFilter;
+}
 
     const products = await prisma.product.findMany({
       where: whereClause,

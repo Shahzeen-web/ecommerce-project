@@ -38,7 +38,7 @@ async function main() {
       name: "Wireless Bluetooth Headphones",
       description: "Experience crystal clear sound with long battery life.",
       price: 8999,
-      imageUrl: "/images/headphones.webp",
+      imageUrl: "https://ecommerce-project-production-28e7.up.railway.app/images/headphones.webp",
       category: { connect: { id: electronics.id } },
     },
   });
@@ -48,7 +48,7 @@ async function main() {
       name: "The Pragmatic Programmer",
       description: "A classic book for software developers and engineers.",
       price: 2999,
-      imageUrl: "/images/books.webp",
+      imageUrl: "https://ecommerce-project-production-28e7.up.railway.app/images/books.webp",
       category: { connect: { id: books.id } },
     },
   });
@@ -58,7 +58,7 @@ async function main() {
       name: "Smart Electric Kettle",
       description: "Boil water quickly with this smart stainless steel kettle.",
       price: 4599,
-      imageUrl: "/images/electrickettle.webp",
+      imageUrl: "https://ecommerce-project-production-28e7.up.railway.app/images/electrickettle.webp",
       category: { connect: { id: appliances.id } },
     },
   });
