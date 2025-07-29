@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: http://localhost:5000/sitemap.xml
+Sitemap: https://ecommerce-project-production-28e7.up.railway.app/sitemap.xml
