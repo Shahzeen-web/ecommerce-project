@@ -1,0 +1,53 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "MyShop backend - REST API and real-time server for the eCommerce app",
+  "author": "Shahzeen",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "seed": "node prisma/seed.js"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "dependencies": {
+    "@elastic/elasticsearch": "^9.0.3",
+    "@prisma/client": "^6.12.0",
+    "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.0",
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "node-cache": "^5.1.2",
+    "nodemailer": "^7.0.5",
+    "socket.io": "^4.8.1",
+    "stripe": "^18.3.0"
+  },
+  "devDependencies": {
+    "jest": "^30.0.5",
+    "nodemon": "^3.0.3",
+    "prisma": "^6.12.0",
+    "supertest": "^7.1.4"
+  },
+  "keywords": [
+    "ecommerce",
+    "backend",
+    "express",
+    "prisma",
+    "rest-api",
+    "socket.io",
+    "stripe",
+    "shop"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

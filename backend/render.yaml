@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: ecommerce-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        value: "postgresql://postgres:4455@localhost:5432/ecommerce"
+      - key: JWT_SECRET
+        value: "mytopsecretkey"
+      - key: STRIPE_SECRET_KEY
+        value: ${STRIPE_SECRET_KEY}
+
