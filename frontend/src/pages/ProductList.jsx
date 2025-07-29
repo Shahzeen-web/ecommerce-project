@@ -20,12 +20,15 @@ export default function ProductList() {
     queryFn: () => getProducts({ search, category, sort, page }),
   });
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/categories")
-      .then((res) => setCategories(res.data))
-      .catch((err) => console.error("Error loading categories", err));
-  }, []);
+  const BACKEND_URL = "https://ecommerce-project-production-28e7.up.railway.app";
+
+useEffect(() => {
+  axios
+    .get(`${BACKEND_URL}/api/categories`)
+    .then((res) => setCategories(res.data))
+    .catch((err) => console.error("Error loading categories", err));
+}, []);
+
 
   const handleFilterChange = (key, value) => {
     const newParams = new URLSearchParams(searchParams);

@@ -1,9 +1,10 @@
+// vite.config.js
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-  base: '/', // ✅ This is for Vercel (root path)
+  base: '/ecommerce-project/', // ✅ MUST match your GitHub repo name
   plugins: [
     react(),
     VitePWA({
@@ -16,7 +17,7 @@ export default defineConfig({
         theme_color: '#7e22ce',
         background_color: '#ffffff',
         display: 'standalone',
-        start_url: '/',
+        start_url: '/ecommerce-project/', // ✅ Ensure this is relative to base
         icons: [
           {
             src: 'icon-192.png',

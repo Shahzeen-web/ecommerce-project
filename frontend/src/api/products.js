@@ -1,5 +1,8 @@
 import axios from "axios";
 
+// ✅ Use your deployed backend URL
+const BASE_URL = "https://ecommerce-project-production-28e7.up.railway.app";
+
 export const getProducts = async ({ search, category, sort, page }) => {
   const params = new URLSearchParams();
   if (search) params.append("search", search);
@@ -7,6 +10,6 @@ export const getProducts = async ({ search, category, sort, page }) => {
   if (sort) params.append("sort", sort);
   if (page) params.append("page", page);
 
-  const { data } = await axios.get(`http://localhost:5000/api/products?${params.toString()}`);
+  const { data } = await axios.get(`${BASE_URL}/api/products?${params.toString()}`);
   return data;
 };
