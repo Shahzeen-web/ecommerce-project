@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import { useCartStore } from "../store/cartStore";
 import { Link, useNavigate } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL; // ✅ Use environment variable
+
 const CartPage = () => {
   const {
     cartItems,
@@ -37,7 +39,7 @@ const CartPage = () => {
         {cartItems.map((item) => {
           const imageSrc = item.imageUrl?.startsWith("http")
             ? item.imageUrl
-            : `http://localhost:5000${
+            : `${API_URL}${
                 item.imageUrl?.startsWith("/") ? item.imageUrl : `/${item.imageUrl}`
               }`;
 

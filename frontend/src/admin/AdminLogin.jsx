@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 
+const API_URL = import.meta.env.VITE_API_URL; // ✅ Load backend URL from .env
+
 const AdminLogin = () => {
   const navigate = useNavigate();
   const setToken = useAuthStore((state) => state.setToken);
@@ -14,10 +16,10 @@ const AdminLogin = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-  "http://localhost:5000/api/auth/admin/login", // ✅ full backend URL
-  { email, password },
-  { withCredentials: true }
-);
+        `${API_URL}/api/auth/admin/login`, // ✅ Use env var here
+        { email, password },
+        { withCredentials: true }
+      );
 
       setToken(res.data.token);
       navigate("/admin/dashboard");

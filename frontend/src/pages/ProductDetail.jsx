@@ -5,6 +5,8 @@ import axios from "axios";
 import ReviewForm from "../components/ReviewForm";
 import { useCartStore } from "../store/cartStore";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -17,8 +19,8 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProductAndReviews = async () => {
       try {
-        const productRes = await axios.get(`http://localhost:5000/api/products/${id}`);
-        const reviewsRes = await axios.get(`http://localhost:5000/api/reviews/${id}`);
+        const productRes = await axios.get(`${API_URL}/api/products/${id}`);
+        const reviewsRes = await axios.get(`${API_URL}/api/reviews/${id}`);
 
         const fetchedReviews = Array.isArray(reviewsRes.data) ? reviewsRes.data : [];
         const total = fetchedReviews.reduce((acc, r) => acc + r.rating, 0);
@@ -43,9 +45,7 @@ const ProductDetail = () => {
 
   const imageSrc = product.imageUrl?.startsWith("http")
     ? product.imageUrl
-    : `http://localhost:5000${
-        product.imageUrl?.startsWith("/") ? product.imageUrl : `/${product.imageUrl}`
-      }`;
+    : `${API_URL}${product.imageUrl?.startsWith("/") ? product.imageUrl : `/${product.imageUrl}`}`;
 
   const isBook = product.category?.name?.toLowerCase().includes("book");
 
@@ -118,7 +118,7 @@ const ProductDetail = () => {
                   src={
                     review.imageUrl.startsWith("http")
                       ? review.imageUrl
-                      : `http://localhost:5000${
+                      : `${API_URL}${
                           review.imageUrl.startsWith("/")
                             ? review.imageUrl
                             : `/${review.imageUrl}`

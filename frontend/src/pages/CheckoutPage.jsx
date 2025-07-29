@@ -7,7 +7,9 @@ import { useCartStore } from "../store/cartStore";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
 
-// ✅ Validation Schema for all fields
+const API_URL = import.meta.env.VITE_API_URL;
+
+// ✅ Validation Schema
 const checkoutSchema = z.object({
   name: z.string().min(2, "Name is required"),
   email: z.string().email("Invalid email"),
@@ -60,7 +62,7 @@ export default function CheckoutPage() {
     };
 
     try {
-      const res = await axios.post("http://localhost:5000/api/orders", payload);
+      const res = await axios.post(`${API_URL}/api/orders`, payload);
       localStorage.setItem("lastOrder", JSON.stringify(payload));
       clearCart();
       navigate("/success", {

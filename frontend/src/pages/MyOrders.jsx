@@ -4,6 +4,8 @@ import { useAuthStore } from "../store/authStore";
 import { useCartStore } from "../store/cartStore";
 import { format } from "date-fns";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const MyOrders = () => {
   const user = useAuthStore((state) => state.user);
   const { addOrderItems } = useCartStore();
@@ -13,7 +15,7 @@ const MyOrders = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/orders/user/${user?.id}`);
+      const res = await axios.get(`${API_URL}/api/orders/user/${user?.id}`);
       setOrders(res.data);
     } catch (error) {
       console.error("❌ Failed to fetch orders:", error);

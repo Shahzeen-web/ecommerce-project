@@ -4,6 +4,8 @@ import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,8 +22,8 @@ export default function LoginPage() {
   const onSubmit = async (data) => {
     try {
       const endpoint = isAdminLogin
-        ? "http://localhost:5000/api/admin/login"
-        : "http://localhost:5000/api/login";
+        ? `${API_URL}/api/admin/login`
+        : `${API_URL}/api/login`;
 
       const res = await axios.post(endpoint, data);
 

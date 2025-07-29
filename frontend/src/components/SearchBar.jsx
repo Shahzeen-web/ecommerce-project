@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import debounce from "lodash.debounce";
 
+const API_URL = import.meta.env.VITE_API_URL; // ✅ Environment-safe backend URL
+
 const SearchBar = () => {
   const [inputValue, setInputValue] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -15,7 +17,7 @@ const SearchBar = () => {
   const fetchSuggestions = async (query) => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/products/autocomplete?query=${query}`
+        `${API_URL}/api/products/autocomplete?query=${query}`
       );
       setSuggestions(Array.isArray(res.data) ? res.data : []);
     } catch (err) {

@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL; // ✅ Use environment variable
+
 export default function ProductCard({ product }) {
   const imageUrl = product.imageUrl?.startsWith("http")
     ? product.imageUrl
-    : `http://localhost:5000${
+    : `${API_URL}${
         product.imageUrl?.startsWith("/") ? product.imageUrl : `/images/${product.imageUrl}`
       }`;
 
@@ -22,7 +24,7 @@ export default function ProductCard({ product }) {
           loading="lazy"
           onError={(e) => {
             e.target.onerror = null;
-            e.target.src = "http://localhost:5000/images/placeholder.webp";
+            e.target.src = `${API_URL}/images/placeholder.webp`; // ✅ Fixed fallback image too
           }}
         />
       </div>

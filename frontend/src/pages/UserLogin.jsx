@@ -5,6 +5,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function UserLogin() {
   const { register, handleSubmit } = useForm();
   const setToken = useAuthStore((state) => state.setToken);
@@ -12,7 +14,7 @@ export default function UserLogin() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", data);
+      const res = await axios.post(`${API_URL}/api/auth/login`, data);
       const token = res.data.token;
 
       setToken(token); // ✅ Store and decode

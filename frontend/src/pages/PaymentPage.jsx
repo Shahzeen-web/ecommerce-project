@@ -2,6 +2,8 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useState } from "react";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const PaymentPage = () => {
   const stripe = useStripe();
   const elements = useElements();
@@ -17,10 +19,10 @@ const PaymentPage = () => {
     setLoading(true);
 
     try {
-      // Create payment intent
+      // ✅ Create payment intent
       const { data } = await axios.post(
-        "http://localhost:5000/api/payments/create-payment-intent",
-        { amount: 49.99 } // replace with actual amount
+        `${API_URL}/api/payments/create-payment-intent`,
+        { amount: 49.99 } // Replace this with dynamic amount
       );
 
       const result = await stripe.confirmCardPayment(data.clientSecret, {
@@ -32,10 +34,10 @@ const PaymentPage = () => {
       if (result.error) {
         setMessage(result.error.message);
       } else if (result.paymentIntent.status === "succeeded") {
-        setMessage("Payment successful!");
+        setMessage("✅ Payment successful!");
       }
     } catch (error) {
-      setMessage("Payment failed. Try again.");
+      setMessage("❌ Payment failed. Try again.");
     }
 
     setLoading(false);
