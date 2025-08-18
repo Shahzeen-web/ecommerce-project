@@ -3,7 +3,7 @@ import cache from "../utils/cache.js";
 
 const prisma = new PrismaClient();
 
-// ✅ GET /api/products (with smart caching, search, filters, sort, pagination)
+// ✅ GET /api/products (with caching, search, filters, sort, pagination)
 export const getProducts = async (req, res) => {
   try {
     const {
@@ -39,20 +39,20 @@ export const getProducts = async (req, res) => {
 
     const whereClause = {};
 
-if (search) {
-  whereClause.name = {
-    contains: search,
-    mode: "insensitive",
-  };
-}
+    if (search) {
+      whereClause.name = {
+        contains: search,
+        mode: "insensitive",
+      };
+    }
 
-if (categoryId) {
-  whereClause.categoryId = categoryId;
-}
+    if (categoryId) {
+      whereClause.categoryId = categoryId;
+    }
 
-if (minPrice || maxPrice) {
-  whereClause.price = priceFilter;
-}
+    if (minPrice || maxPrice) {
+      whereClause.price = priceFilter;
+    }
 
     const products = await prisma.product.findMany({
       where: whereClause,
@@ -69,13 +69,16 @@ if (minPrice || maxPrice) {
       total,
       page: pageNum,
       totalPages: Math.ceil(total / take),
+      pageSize: take,
+      hasNextPage: pageNum * take < total,
+      hasPrevPage: pageNum > 1,
     };
 
-    cache.set(cacheKey, response);
+    cache.set(cacheKey, response, 60); // cache for 60 seconds
     res.json(response);
   } catch (error) {
     console.error("\u274C Error fetching products:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error fetching products" });
   }
 };
 
@@ -84,8 +87,12 @@ export const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
 
+    const cacheKey = `product:${id}`;
+    const cached = cache.get(cacheKey);
+    if (cached) return res.json(cached);
+
     const product = await prisma.product.findUnique({
-      where: { id: Number(id) },
+      where: { id: parseInt(id) },
       include: { category: true },
     });
 
@@ -93,10 +100,11 @@ export const getProductById = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
+    cache.set(cacheKey, product, 60);
     res.json(product);
   } catch (error) {
     console.error("\u274C Error fetching product by ID:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error fetching product" });
   }
 };
 
@@ -125,8 +133,8 @@ export const getProductSuggestions = async (req, res) => {
 
     res.json(suggestions);
   } catch (error) {
-    console.error("\u274C Error fetching suggestions:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error("\u274C Error fetching product suggestions:", error);
+    res.status(500).json({ message: "Server error fetching suggestions" });
   }
 };
 
@@ -147,8 +155,10 @@ export const createProduct = async (req, res) => {
         imageUrl,
         categoryId: parseInt(categoryId),
       },
+      include: { category: true },
     });
 
+    cache.clear(); // clear cache on create
     res.status(201).json(newProduct);
   } catch (error) {
     console.error("\u274C Error creating product:", error);
@@ -162,7 +172,7 @@ export const updateProduct = async (req, res) => {
   const { name, description, price, imageUrl, categoryId } = req.body;
 
   try {
-    const product = await prisma.product.update({
+    const updatedProduct = await prisma.product.update({
       where: { id: parseInt(id) },
       data: {
         name,
@@ -171,9 +181,11 @@ export const updateProduct = async (req, res) => {
         imageUrl,
         categoryId: parseInt(categoryId),
       },
+      include: { category: true },
     });
 
-    res.json(product);
+    cache.clear(); // clear cache on update
+    res.json(updatedProduct);
   } catch (error) {
     console.error("\u274C Error updating product:", error);
     res.status(500).json({ message: "Server error updating product" });
@@ -189,6 +201,7 @@ export const deleteProduct = async (req, res) => {
       where: { id: parseInt(id) },
     });
 
+    cache.clear(); // clear cache on delete
     res.json({ message: "Product deleted successfully" });
   } catch (error) {
     console.error("\u274C Error deleting product:", error);

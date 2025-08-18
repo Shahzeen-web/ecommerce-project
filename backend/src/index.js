@@ -8,6 +8,8 @@ import compression from "compression";
 import http from "http"; // ✅ Needed for WebSocket
 import { Server as SocketIOServer } from "socket.io";
 
+// const path = require('path');
+
 // ✅ Load environment variables
 dotenv.config();
 
@@ -28,7 +30,6 @@ const io = new SocketIOServer(server, {
     credentials: true,
   },
 });
-
 
 // ✅ Real-time cart events
 io.on("connection", (socket) => {
@@ -54,12 +55,11 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5175",
-      "https://shahzeen-web.github.io", // ✅ Add this
+      "https://shahzeen-web.github.io", 
     ],
     credentials: true,
   })
 );
-
 
 // ✅ Stripe webhook must come before express.json
 import webhookRoutes from "../routes/webhookRoutes.js";
@@ -110,7 +110,7 @@ app.get("/", (req, res) => {
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
-console.log(`🚀 Server running with WebSocket on port ${PORT}`);
+  console.log(`🚀 Server running with WebSocket on port ${PORT}`);
 });
 
 export default app;
