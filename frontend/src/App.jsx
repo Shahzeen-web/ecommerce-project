@@ -1,15 +1,15 @@
-import { lazy, Suspense, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { lazy, Suspense, useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
 import FloatingCartIcon from "./components/FloatingCartIcon";
-import AdminLogin from "./admin/AdminLogin";
-import AdminLayout from "./admin/AdminLayout";
-import AdminRoute from "./routes/AdminRoute";
+import Header from "./components/Header";
 import { useAuthStore } from "./store/authStore";
 import { useCartStore } from "./store/cartStore";
-import Header from "./components/Header";
 import socket from "./socket"; // ✅ WebSocket client
+import AdminRoute from "./routes/AdminRoute";
+import AdminLayout from "./admin/AdminLayout";
+import AdminLogin from "./admin/AdminLogin";
 
-// ✅ Lazy load pages
+// ✅ Lazy loaded pages
 const ProductList = lazy(() => import("./pages/ProductList"));
 const ProductDetail = lazy(() => import("./pages/ProductDetail"));
 const CartPage = lazy(() => import("./pages/CartPage"));
@@ -24,12 +24,11 @@ const UserLogin = lazy(() => import("./pages/UserLogin"));
 
 function App() {
   useEffect(() => {
-    // ✅ Load logged-in user from localStorage
+    // ✅ Load logged-in user
     useAuthStore.getState().loadUser();
 
-    // ✅ Setup WebSocket listener for cart updates
+    // ✅ Real-time cart updates
     socket.on("cart:updated", (updatedCart) => {
-      console.log("🛒 Real-time cart received:", updatedCart);
       useCartStore.setState({ cartItems: updatedCart });
     });
 
@@ -39,8 +38,8 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter>
-      <Header /> {/* ✅ Global Header */}
+    <>
+      <Header /> {/* Global header */}
 
       <Suspense fallback={<div className="p-6">Loading...</div>}>
         <Routes>
@@ -53,11 +52,10 @@ function App() {
           <Route path="/success" element={<SuccessPage />} />
           <Route path="/login" element={<UserLogin />} />
 
-          {/* 🔐 Admin Login & Review */}
+          {/* 🔐 Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/reviews" element={<AdminReviewsPage />} />
 
-          {/* 🛡 Admin Protected Routes */}
           <Route
             path="/admin"
             element={
@@ -73,9 +71,9 @@ function App() {
         </Routes>
       </Suspense>
 
-      {/* 🛒 Floating Cart Icon */}
+      {/* Floating cart icon */}
       <FloatingCartIcon />
-    </BrowserRouter>
+    </>
   );
 }
 

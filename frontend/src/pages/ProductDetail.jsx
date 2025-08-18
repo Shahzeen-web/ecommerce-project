@@ -5,7 +5,8 @@ import axios from "axios";
 import ReviewForm from "../components/ReviewForm";
 import { useCartStore } from "../store/cartStore";
 
-const API_URL = import.meta.env.VITE_API_URL;
+// ✅ Use live backend URL for GitHub Pages
+const API_URL = "https://ecommerce-project-production-28e7.up.railway.app";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -19,12 +20,16 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProductAndReviews = async () => {
       try {
+        // Fetch product
         const productRes = await axios.get(`${API_URL}/api/products/${id}`);
-        const reviewsRes = await axios.get(`${API_URL}/api/reviews/${id}`);
 
+        // Fetch reviews
+        const reviewsRes = await axios.get(`${API_URL}/api/reviews/${id}`);
         const fetchedReviews = Array.isArray(reviewsRes.data) ? reviewsRes.data : [];
-        const total = fetchedReviews.reduce((acc, r) => acc + r.rating, 0);
-        const avgRating = fetchedReviews.length ? total / fetchedReviews.length : 0;
+
+        // Calculate average rating
+        const totalRating = fetchedReviews.reduce((acc, r) => acc + r.rating, 0);
+        const avgRating = fetchedReviews.length ? totalRating / fetchedReviews.length : 0;
 
         setProduct({ ...productRes.data, avgRating });
         setReviews(fetchedReviews);
@@ -52,7 +57,7 @@ const ProductDetail = () => {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <Helmet>
-        <title>{product.name} | ecommerce-store</title>
+        <title>{product.name} | E-Commerce Store</title>
         <meta name="description" content={product.description} />
       </Helmet>
 
@@ -73,15 +78,13 @@ const ProductDetail = () => {
         <div>
           <h1 className="text-2xl font-bold">{product.name}</h1>
           <p className="text-gray-600 mt-2">{product.description}</p>
-          <p className="text-xl font-semibold mt-4">Rs. {product.price}</p>
+          <p className="text-xl font-semibold mt-4">PKR {product.price}</p>
           <div className="flex items-center gap-2 mt-3">
-            <span className="text-yellow-500 text-lg">
+            <span className="text-yellow-500">
               {"★".repeat(Math.round(product.avgRating))}
               {"☆".repeat(5 - Math.round(product.avgRating))}
             </span>
-            <span className="text-sm text-gray-600">
-              ({reviews.length} reviews)
-            </span>
+            <span className="text-sm text-gray-600">({reviews.length} reviews)</span>
           </div>
 
           <button
@@ -142,7 +145,7 @@ const ProductDetail = () => {
           ))
         )}
 
-        <ReviewForm />
+        <ReviewForm productId={product.id} />
       </div>
     </div>
   );

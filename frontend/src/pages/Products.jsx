@@ -2,6 +2,8 @@ import { Helmet } from "react-helmet-async";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+const BACKEND_URL = "https://ecommerce-project-production-28e7.up.railway.app";
+
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,9 +11,9 @@ export default function Products() {
 
   useEffect(() => {
     axios
-      .get("https://ecommerce-project-production-28e7.up.railway.app/api/products")
+      .get(`${BACKEND_URL}/api/products`)
       .then((res) => {
-        setProducts(res.data.products); // correctly access the array
+        setProducts(res.data.products); // correct for backend response
         setLoading(false);
       })
       .catch((err) => {
@@ -24,7 +26,10 @@ export default function Products() {
     <>
       <Helmet>
         <title>All Products | E-Commerce Store</title>
-        <meta name="description" content="Browse all available products in our store." />
+        <meta
+          name="description"
+          content="Browse all available products in our store."
+        />
       </Helmet>
 
       <div className="p-4">
@@ -44,7 +49,9 @@ export default function Products() {
               <h2 className="text-lg font-semibold">{product.name}</h2>
               <p className="text-gray-600">{product.description}</p>
               <p className="text-blue-600 font-bold">PKR {product.price}</p>
-              <p className="text-sm text-gray-500">Category: {product.category.name}</p>
+              <p className="text-sm text-gray-500">
+                Category: {product.category.name}
+              </p>
             </div>
           ))}
         </div>
