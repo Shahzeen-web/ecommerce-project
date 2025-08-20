@@ -10,20 +10,29 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const setToken = useAuthStore((state) => state.setToken);
-  const [loginError, setLoginError] = useState("");
 
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [loginError, setLoginError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
   const isAdminLogin = location.pathname.includes("/admin");
 
   const onSubmit = async (data) => {
+    setLoginError("");
+    setLoading(true);
     try {
       const endpoint = isAdminLogin
-        ? `${API_URL}/api/admin/login`
-        : `${API_URL}/api/login`;
+        ? `${API_URL}/api/auth/admin/login`
+        : `${API_URL}/api/auth/login`;
 
       const res = await axios.post(endpoint, data);
 
-      setToken(res.data.token); // save JWT
+      setToken(res.data.token);
 
       if (res.data.user.role === "admin") {
         navigate("/admin/dashboard");
@@ -31,7 +40,9 @@ export default function LoginPage() {
         navigate("/");
       }
     } catch (err) {
-      setLoginError(err.response?.data?.message || "Login failed");
+      setLoginError(err.response?.data?.message || "Invalid email or password");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -39,12 +50,13 @@ export default function LoginPage() {
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="max-w-md w-full p-6 bg-white rounded shadow">
         <h2 className="text-2xl font-bold mb-4 text-center">
-          {isAdminLogin ? "Admin Login" : "Login"}
+          {isAdminLogin ? "Admin Login" : "User Login"}
         </h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Email */}
           <div>
-            <label>Email</label>
+            <label className="block mb-1">Email</label>
             <input
               type="email"
               {...register("email", { required: "Email is required" })}
@@ -55,8 +67,9 @@ export default function LoginPage() {
             )}
           </div>
 
+          {/* Password */}
           <div>
-            <label>Password</label>
+            <label className="block mb-1">Password</label>
             <input
               type="password"
               {...register("password", { required: "Password is required" })}
@@ -67,26 +80,36 @@ export default function LoginPage() {
             )}
           </div>
 
+          {/* Error Message */}
           {loginError && (
             <p className="text-red-500 text-sm text-center">{loginError}</p>
           )}
 
+          {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+            disabled={loading}
+            className={`w-full py-2 rounded text-white ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
-        <div className="flex justify-between mt-4 text-sm">
-          <Link to="/forgot-password" className="text-blue-600 hover:underline">
-            Forgot Password?
-          </Link>
-          <Link to="/signup" className="text-blue-600 hover:underline">
-            Sign Up
-          </Link>
-        </div>
+        {/* Extra options */}
+        {!isAdminLogin && (
+          <div className="flex justify-between mt-4 text-sm">
+            <Link to="/forgot-password" className="text-blue-600 hover:underline">
+              Forgot Password?
+            </Link>
+            <Link to="/signup" className="text-blue-600 hover:underline">
+              Sign Up
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
