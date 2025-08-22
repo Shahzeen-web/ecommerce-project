@@ -17,32 +17,44 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // ✅ Fetch product + reviews
   useEffect(() => {
-    const fetchProductAndReviews = async () => {
-      try {
-        // Fetch product
-        const productRes = await axios.get(`${API_URL}/api/products/${id}`);
-
-        // Fetch reviews
-        const reviewsRes = await axios.get(`${API_URL}/api/reviews/${id}`);
-        const fetchedReviews = Array.isArray(reviewsRes.data) ? reviewsRes.data : [];
-
-        // Calculate average rating
-        const totalRating = fetchedReviews.reduce((acc, r) => acc + r.rating, 0);
-        const avgRating = fetchedReviews.length ? totalRating / fetchedReviews.length : 0;
-
-        setProduct({ ...productRes.data, avgRating });
-        setReviews(fetchedReviews);
-      } catch (err) {
-        console.error("Error fetching product or reviews:", err);
-        setError("Failed to load product details.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProductAndReviews();
   }, [id]);
+
+  const fetchProductAndReviews = async () => {
+    try {
+      // Fetch product
+      const productRes = await axios.get(`${API_URL}/api/products/${id}`);
+
+      // Fetch reviews
+      const reviewsRes = await axios.get(`${API_URL}/api/reviews/${id}`);
+      const fetchedReviews = Array.isArray(reviewsRes.data) ? reviewsRes.data : [];
+
+      // Calculate average rating
+      const totalRating = fetchedReviews.reduce((acc, r) => acc + r.rating, 0);
+      const avgRating = fetchedReviews.length ? totalRating / fetchedReviews.length : 0;
+
+      setProduct({ ...productRes.data, avgRating });
+      setReviews(fetchedReviews);
+    } catch (err) {
+      console.error("Error fetching product or reviews:", err);
+      setError("Failed to load product details.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ Add new review instantly without reload
+  const handleReviewAdded = (newReview) => {
+    const updatedReviews = [newReview, ...reviews];
+    setReviews(updatedReviews);
+
+    const totalRating = updatedReviews.reduce((acc, r) => acc + r.rating, 0);
+    const avgRating = updatedReviews.length ? totalRating / updatedReviews.length : 0;
+
+    setProduct((prev) => ({ ...prev, avgRating }));
+  };
 
   if (loading) return <div className="p-8">Loading...</div>;
   if (error) return <div className="p-8 text-red-600">{error}</div>;
@@ -61,6 +73,7 @@ const ProductDetail = () => {
         <meta name="description" content={product.description} />
       </Helmet>
 
+      {/* Product details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <img
           src={imageSrc}
@@ -99,6 +112,7 @@ const ProductDetail = () => {
         </div>
       </div>
 
+      {/* Reviews */}
       <div className="mt-10">
         <h2 className="text-xl font-semibold mb-4">Customer Reviews</h2>
 
@@ -106,7 +120,7 @@ const ProductDetail = () => {
           <p className="text-gray-500">No reviews yet.</p>
         ) : (
           reviews.map((review) => (
-            <div key={review.id} className="border rounded-lg p-4 mb-4">
+            <div key={review._id} className="border rounded-lg p-4 mb-4">
               <div className="flex items-center gap-2 mb-1">
                 <strong>{review.user?.name || "User"}</strong>
                 <span className="text-yellow-500">
@@ -122,9 +136,7 @@ const ProductDetail = () => {
                     review.imageUrl.startsWith("http")
                       ? review.imageUrl
                       : `${API_URL}${
-                          review.imageUrl.startsWith("/")
-                            ? review.imageUrl
-                            : `/${review.imageUrl}`
+                          review.imageUrl.startsWith("/") ? review.imageUrl : `/${review.imageUrl}`
                         }`
                   }
                   alt="review"
@@ -145,7 +157,8 @@ const ProductDetail = () => {
           ))
         )}
 
-        <ReviewForm productId={product.id} />
+        {/* ✅ Pass callback so reviews refresh */}
+        <ReviewForm productId={product._id} onReviewAdded={handleReviewAdded} />
       </div>
     </div>
   );
