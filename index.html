@@ -6,31 +6,34 @@
     <meta name="theme-color" content="#7e22ce" />
     <title>Ecommerce Store</title>
 
-    <!-- ✅ Preconnect & DNS-prefetch for Fonts -->
+    <!-- Preconnect & DNS-prefetch for Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
 
-    <!-- ✅ PWA Manifest & Icons (all in /public) -->
-    <link rel="manifest" href="./manifest.json" />
-    <link rel="icon" type="image/png" href="./favicon.png" />
+    <!-- Manifest -->
+    <link rel="manifest" href="/ecommerce-project/manifest.webmanifest" />
 
-    <!-- ✅ Google Analytics -->
+    <!-- Favicons & PWA Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/ecommerce-project/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/ecommerce-project/icon-512.png" />
+    <link rel="icon" type="image/png" href="/ecommerce-project/favicon.png" />
+
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-BC1JW7J801"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
+      function gtag(){ dataLayer.push(arguments); }
       gtag("js", new Date());
       gtag("config", "G-BC1JW7J801");
     </script>
-    <script type="module" crossorigin src="/ecommerce-project/assets/index-DfxJ19a5.js"></script>
-    <link rel="stylesheet" crossorigin href="/ecommerce-project/assets/index-P303i6Hx.css">
+    <script type="module" crossorigin src="/ecommerce-project/assets/index-BR6fr2J6.js"></script>
+    <link rel="stylesheet" crossorigin href="/ecommerce-project/assets/index-BbY_WIKm.css">
   <link rel="manifest" href="/ecommerce-project/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/ecommerce-project/registerSW.js"></script></head>
 
   <body>
-    <div id="root"></div>
+    <div id="root"></div>
+    <noscript>This app works best with JavaScript enabled.</noscript>
+
+    <!-- ✅ Vite React entry point -->
   </body>
 </html>
