@@ -16,7 +16,7 @@ A complete, production-ready full-stack e-commerce platform built with modern we
 - Realtime: Socket.IO
 - Payments: Stripe
 - Email: Nodemailer
-- Deployment: Ready for Vercel / Render
+- Deployment: Ready for Vercel / Railway
 
 ## 📦 Folder Structure
 
